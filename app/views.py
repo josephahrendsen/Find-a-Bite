@@ -21,7 +21,13 @@ def data(request):
             rating = MyQueryForm.cleaned_data['rating']
     else:
         MyQueryForm = QueryForm()
-    
+
+    #Converting radius from miles to meters for API
+    radius = radius * 1609.34
+
+    print("cuisine is ", cuisine)
+    print("radius is ", radius)
+
     #Get API key
     f = open("api_key.txt", "r")
     api_key = f.read()
