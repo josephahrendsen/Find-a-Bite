@@ -1,3 +1,7 @@
+.form-control {
+    color: blue;
+}
+
 #title {
     color: black;
     font-size: 40px;

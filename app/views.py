@@ -1,37 +1,53 @@
 from django.shortcuts import render
-from app.forms import LoginForm
+from .forms import QueryForm
 import requests
-
-f = open("api_key.txt", "r")
-api_key = f.read()
 
 
 def index(request):
-    data = {}
-    return render(request, 'app/index.html', data)
+    form = QueryForm()
+    return render(request, 'app/index.html', {'form': form})
 
-
-def index_post(request):
+ 
+def data(request):
     if request.method == "POST":
         # Get the posted form
-        MyLoginForm = LoginForm(request.POST)
+        MyQueryForm = QueryForm(request.POST)
 
-        if MyLoginForm.is_valid():
-            cuisine = MyLoginForm.cleaned_data['username']
-            distance = MyLoginForm.cleaned_data['distance']
-            price = MyLoginForm.cleaned_data['price']
-            rating = MyLoginForm.cleaned_data['rating']
+        if MyQueryForm.is_valid():
+            cuisine = MyQueryForm.cleaned_data['cuisine']
+            location = MyQueryForm.cleaned_data['location']
+            radius = MyQueryForm.cleaned_data['radius']
+            price = MyQueryForm.cleaned_data['price']
+            rating = MyQueryForm.cleaned_data['rating']
     else:
-        MyLoginForm = LoginForm()
+        MyQueryForm = QueryForm()
+    
+    #Get API key
+    f = open("api_key.txt", "r")
+    api_key = f.read()
 
-    headers = {'Authorization': 'bearer ' + api_key}
-    query = 0
+    #Set endpoint and header
+    endpoint = 'https://api.yelp.com/v3/businesses/search'
+    header = {'Authorization': 'bearer %s' % api_key}
 
-    response = requests.get(
-        query, headers=headers
-    )
+    #Get parameters for the search
+    parameters = {
+        'categories': cuisine,
+        'location': location,
+        'radius': radius,
+        'price': price,
+        #'open_now': True,
+    }
+
+
+    # Do something with rating
+
+
+
+    #Send a response to the API
+    response = requests.get(url=endpoint, params=parameters, headers=header)
     data = {'response': response.json()}
-    return render(request, 'app/index.html', data)
+    return render(request, 'app/data.html', data)
 
 
 def dashboard(request):
