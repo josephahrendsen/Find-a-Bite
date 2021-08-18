@@ -12,8 +12,9 @@ class QueryForm(forms.Form):
       ("italian", "Italian"),
 
    )
-   cuisine = forms.MultipleChoiceField(choices=CHOICES, widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-control'}))
+   categories = forms.MultipleChoiceField(label="Cuisine", choices=CHOICES, widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-control'}))
    location = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
-   radius = forms.IntegerField(max_value=50000)
+   radius = forms.IntegerField(label="Radius (Miles)", max_value=25)
    price = forms.IntegerField(max_value=4)
-   rating = forms.IntegerField(max_value=5)
+   rating = forms.FloatField(max_value=5)
+
