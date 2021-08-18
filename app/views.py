@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .forms import QueryForm
 import requests
+import random
 
 
 def index(request):
@@ -21,19 +22,18 @@ def data(request):
             rating = MyQueryForm.cleaned_data['rating']
     else:
         MyQueryForm = QueryForm()
-
-
     
     # Format categories to be category1,category2
     categories_str = ""
     for i in range(len(categories)):
-        print(i)
         categories_str += categories[i]
         if i != len(categories) - 1:
             categories_str += ","
 
     # Converting radius from miles to meters for API
     radius = int(radius * 1609.34)
+
+    # Format price to be 1,2   
 
     # Get API key
     f = open("api_key.txt", "r")
@@ -54,16 +54,24 @@ def data(request):
 
     # Send a response to the API
     response = (requests.get(url=endpoint, params=parameters, headers=header)).json()
+    businesses = []
 
-    # Filter out reponse by rating
+    # Filter out reponse by rating and add valid businesses to new list
     for i in range(len(response.get('businesses'))):
-        print(response.get('businesses')[i].get('rating'))
-        if response.get('businesses')[i].get('rating') < rating:  # TODO Why doesn't this line work. Some reason says index out of bounds
-            response.get('businesses').pop(i)
+        if response.get('businesses')[i].get('rating') >= rating:
+            businesses.append(response.get('businesses')[i])
+    response = {'businesses': businesses}
 
-    data = {'response': response}
+    print("response returned " + str(len(response.get('businesses'))))
+
+    # Return a random restaurant
+    randIndex = random.randint(0, len(response.get('businesses'))-1)
+    restaurant = response.get('businesses')[randIndex]
+
+    data = {'restaurant': restaurant}
     return render(request, 'app/data.html', data)
 
+    
 
 def dashboard(request):
     data = {}
