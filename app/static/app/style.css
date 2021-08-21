@@ -1,10 +1,20 @@
 .form-control {
-    color: green;
+    color: brown;
     list-style: none;
     column-count: 2;
     margin-top: 15px;
     text-indent: 20px;
     margin-left: 15px;
+    font-size: 10px;
+    font-family: sans-serif, Arial;
+
+
+
+}
+
+input[type=checkbox] {
+    transform: scale(1.5);
+    font-size: .5em;
 }
 
 #mainForm{
@@ -38,7 +48,7 @@ form {
 .categories, li{
     margin-top: 1em;
     font-family: Arial, serif;
-    font-size: 40px;
+    font-size: 20px;
 
 }
 
