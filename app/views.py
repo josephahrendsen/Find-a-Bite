@@ -34,6 +34,12 @@ def data(request):
     radius = int(radius * 1609.34)
 
     # Format price to be 1,2   
+    price_str = ""
+    for i in range(len(price)):
+        price_str += price[i]
+        if i != len(price) - 1:
+            price_str += ","
+
 
     # Get API key
     f = open("api_key.txt", "r")
@@ -48,13 +54,18 @@ def data(request):
         'categories': categories_str,
         'location': location,
         'radius': radius,
-        'price': price,
+        'price': price_str,
         #'open_now': True,
     }
 
     # Send a response to the API
     response = (requests.get(url=endpoint, params=parameters, headers=header)).json()
     businesses = []
+
+    # Check if response is empty
+    if len(response.get('businesses')) == 0:
+        data = {'error': 'There are no matches for the criteria provided'}
+        return render(request, 'app/error.html', data)
 
     # Filter out reponse by rating and add valid businesses to new list
     for i in range(len(response.get('businesses'))):

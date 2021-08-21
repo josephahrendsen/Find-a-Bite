@@ -1,2 +1,9 @@
-<h1>Here are some restaurants</h1>
-<h4>{{ restaurant.name }}</h4>
+<h1>You got {{ restaurant.name }}!</h1>
+<h3>{{ restaurant.location.display_address }} </h3>
+
+<h4>They are known for: </h4>
+{% for category in restaurant.categories %}
+    <ol>{{ category.title }}</ol>
+{% empty %}
+    <p>Sorry, no categories to show</p>
+{% endfor %}
